@@ -125,6 +125,16 @@ class DatabaseManager {
     });
   }
 
+  /**
+   * Creates all tables in the database.
+   *
+   * This function creates all the tables in the database, including the
+   * schools, students, subjects, grades, attendance, conduct, users, settings,
+   * reports, grading schemas, audit logs, and backups tables.
+   *
+   * @private
+   * @returns {void}
+   */
   async createTables() {
     const schemas = [
       // Schools table
@@ -341,6 +351,24 @@ class DatabaseManager {
 
     indexes.forEach(index => this.db.exec(index));
   }
+
+/**
+ * Inserts default data into the database.
+ *
+ * This function populates the database with default grading schemas,
+ * default settings, and creates a default admin user if none exists.
+ * It ensures that essential data is available for the application to
+ * function correctly.
+ *
+ * Grading schemas define the standards for evaluating student performance
+ * across different educational levels. Default settings provide initial
+ * configuration values for the application, such as school name, academic
+ * year, and backup preferences. A default admin user is created to ensure
+ * there is at least one administrative account for accessing the system.
+ *
+ * @returns {Promise<void>} A promise that resolves when the default data
+ * has been successfully inserted.
+ */
 
   async insertDefaultData() {
     // Insert default grading schemas
@@ -665,6 +693,19 @@ class DatabaseManager {
     return this.statements.getSubjects.all();
   }
 
+  /**
+   * Creates a new subject with the given data.
+   *
+   * @param {Object} subjectData An object containing the subject data.
+   * @param {string} subjectData.name The name of the subject.
+   * @param {string} [subjectData.code] The code of the subject.
+   * @param {string} subjectData.class_level The class level for which the subject is applicable.
+   * @param {boolean} [subjectData.is_core] Whether the subject is a core subject or not.
+   * @param {number} [subjectData.weight] The weight of the subject in the grading schema.
+   * @param {string} [subjectData.description] The description of the subject.
+   * @param {string} [subjectData.teacher_name] The name of the teacher for the subject.
+   * @returns {Promise<Object>} A promise that resolves with the result of the operation.
+   */
   async createSubject(subjectData) {
     const result = this.statements.createSubject.run(
       subjectData.name,
@@ -698,6 +739,11 @@ class DatabaseManager {
     return result;
   }
 
+  /**
+   * Deletes a subject from the database.
+   * @param {number} id The ID of the subject to delete.
+   * @returns {Promise<Object>} A promise that resolves with the result of the operation.
+   */
   async deleteSubject(id) {
     const oldData = this.db.prepare('SELECT * FROM subjects WHERE id = ?').get(id);
     const result = this.statements.deleteSubject.run(id);
@@ -712,6 +758,18 @@ class DatabaseManager {
     return this.statements.getGrades.all(studentId, term, year.value);
   }
 
+  /**
+   * Saves multiple grades to the database in a single transaction.
+   * @param {Object[]} gradesData An array of objects containing the grade data.
+   * @param {number} gradesData.student_id The student ID for which the grade applies.
+   * @param {number} gradesData.subject_id The subject ID for which the grade applies.
+   * @param {string} gradesData.term The term for which the grade applies.
+   * @param {string} gradesData.academic_year The academic year for which the grade applies.
+   * @param {number} gradesData.score The score achieved by the student.
+   * @param {string} [gradesData.grade_letter] The letter grade achieved by the student (optional).
+   * @param {string} [gradesData.remarks] Any remarks for the grade (optional).
+   * @returns {Promise<Object[]>} A promise that resolves with the results of the operation.
+   */
   async saveGrades(gradesData) {
     const transaction = this.db.transaction((grades) => {
       const results = [];
@@ -735,10 +793,35 @@ class DatabaseManager {
     return results;
   }
 
+  /**
+   * Gets all grades for a given student, optionally filtered by academic year.
+   * @param {number} studentId The student ID for which to retrieve grades.
+   * @param {string} [academicYear] The academic year for which to retrieve grades. Defaults to current academic year.
+   * @returns {Promise<Object[]>} A promise that resolves with the grades for the given student.
+   */
   async getStudentGrades(studentId, academicYear = null) {
     const year = academicYear || await this.getSetting('academic_year');
     return this.statements.getStudentGrades.all(studentId, year.value);
   }
+
+/**
+ * Imports multiple grades from CSV data into the database.
+ * 
+ * Validates and inserts each row of grade data within a single transaction.
+ * Each row must include student_id, subject_id, term, academic_year, score,
+ * grade_letter, and remarks. If any row fails validation or insertion,
+ * the entire transaction is rolled back.
+ *
+ * @param {Object[]} csvData - An array of objects representing the grade data to import.
+ * @param {number} csvData[].student_id - The ID of the student associated with the grade.
+ * @param {number} csvData[].subject_id - The ID of the subject associated with the grade.
+ * @param {string} csvData[].term - The term during which the grade was received.
+ * @param {string} csvData[].academic_year - The academic year during which the grade was received.
+ * @param {number} csvData[].score - The score achieved by the student.
+ * @param {string} csvData[].grade_letter - The letter grade achieved by the student.
+ * @param {string} csvData[].remarks - Any additional remarks about the grade.
+ * @returns {Promise<Object[]>} A promise that resolves with the results of the operation.
+ */
 
   async bulkImportGrades(csvData) {
     // Implementation for bulk CSV import
@@ -789,6 +872,23 @@ class DatabaseManager {
     return { ...setting, value };
   }
 
+  /**
+   * Sets a setting in the database.
+   * 
+   * Type conversion is performed automatically depending on the given type.
+   * If the type is 'boolean', the value is converted to a string of 'true' or 'false'.
+   * If the type is 'json', the value is converted to a JSON string.
+   * If the type is 'number', the value is converted to a string.
+   * 
+   * If the encrypt flag is set, the value is encrypted using the database's
+   * built-in encryption function. The encryption flag is then updated in the database.
+   * 
+   * @param {string} key The key of the setting to set.
+   * @param {any} value The value of the setting to set.
+   * @param {string} [type='string'] The type of the value. One of 'boolean', 'json', 'number', or 'string'.
+   * @param {boolean} [encrypt=false] Whether to encrypt the value before storing it.
+   * @returns {Promise<Object>} A promise that resolves with the result of the operation.
+   */
   async setSetting(key, value, type = 'string', encrypt = false) {
     let processedValue = value;
 
@@ -815,6 +915,16 @@ class DatabaseManager {
 
     return result;
   }
+
+  /**
+   * Retrieves all settings from the database.
+   * 
+   * Decrypts and converts the value of each setting based on its type.
+   * Supported types include 'boolean', 'number', and 'json'.
+   * 
+   * @returns {Promise<Object>} A promise that resolves with an object containing all settings, 
+   * where each key is the setting's key and the value includes the decrypted and converted setting value.
+   */
 
   async getAllSettings() {
     const settings = this.statements.getAllSettings.all();
@@ -883,6 +993,22 @@ class DatabaseManager {
     this.db.pragma('incremental_vacuum');
   }
 
+  /**
+   * Gets database statistics.
+   *
+   * Returns an object with the following properties:
+   * - `students`: The number of active students in the database.
+   * - `subjects`: The number of subjects in the database.
+   * - `grades`: The number of grades stored in the database.
+   * - `users`: The number of active users in the database.
+   * - `reports`: The number of generated reports in the database.
+   * - `backups`: The number of backups in the database.
+   * - `diskUsage`: The total disk usage of the database in bytes.
+   * - `lastBackup`: The timestamp of the last backup, or null if no backups exist.
+   * - `uptime`: The uptime of the database in seconds.
+   *
+   * @returns {Promise<Object>} A promise that resolves with an object containing the statistics.
+   */
   async getStatistics() {
     const stats = {
       students: this.db.prepare('SELECT COUNT(*) as count FROM students WHERE status = ?').get('Active').count,
@@ -898,6 +1024,18 @@ class DatabaseManager {
     return stats;
   }
 
+  /**
+   * Gets the disk usage of the database.
+   *
+   * Returns an object with three properties: `database`, `wal`, and `shm`.
+   * The `database` property is the size of the database file in bytes.
+   * The `wal` property is the size of the write-ahead log file in bytes.
+   * The `shm` property is the size of the shared memory file in bytes.
+   *
+   * If an error occurs while retrieving the disk usage, returns an object with all properties set to 0.
+   *
+   * @returns {Promise<Object>} A promise that resolves with an object containing the disk usage statistics.
+   */
   async getDiskUsage() {
     try {
       const stats = await fs.stat(this.dbPath);
@@ -911,6 +1049,12 @@ class DatabaseManager {
     }
   }
 
+  /**
+   * Gets the size of the specified file in bytes.
+   * 
+   * @param {string} filePath The path to the file to get the size of.
+   * @returns {Promise<number>} A promise that resolves with the size of the file in bytes, or 0 if an error occurs.
+   */
   async getFileSize(filePath) {
     try {
       const stats = await fs.stat(filePath);
@@ -920,11 +1064,32 @@ class DatabaseManager {
     }
   }
 
+  /**
+   * Flushes any pending transactions to disk.
+   *
+   * This is useful when you want to ensure that all pending transactions are
+   * written to disk before performing an operation that requires a clean
+   * database state.
+   *
+   * @returns {Promise<void>} A promise that resolves when the flush operation
+   * is complete.
+   */
   async flush() {
     // Force write any pending transactions
     this.db.pragma('wal_checkpoint(TRUNCATE)');
   }
 
+  /**
+   * Closes all database connections and releases any allocated resources.
+   *
+   * This method should be called when the database is no longer needed, such
+   * as when the application is exiting. It will close all pooled connections
+   * and the main database connection, and set the `isInitialized` property to
+   * false.
+   *
+   * @returns {Promise<void>} A promise that resolves when the close operation
+   * is complete.
+   */
   async close() {
     try {
       // Close all pooled connections
@@ -965,6 +1130,21 @@ class DatabaseManager {
     }
   }
 
+  /**
+   * Gets the backup history for this database.
+   *
+   * @param {number} [limit=10] The maximum number of backups to retrieve.
+   * @returns {Promise<Object[]>} A promise that resolves with an array of backup
+   * objects. The objects contain the following properties:
+   * - `id`: The unique ID of the backup record.
+   * - `filename`: The name of the backup file.
+   * - `file_path`: The path to the backup file.
+   * - `size_bytes`: The size of the backup file in bytes.
+   * - `type`: The type of backup. Possible values are 'manual' and 'automatic'.
+   * - `created_by`: The user ID of the user that created the backup.
+   * - `created_by_name`: The full name of the user that created the backup.
+   * - `created_at`: The timestamp when the backup was created.
+   */
   async getBackupHistory(limit = 10) {
     return this.db.prepare(`
       SELECT b.*, u.full_name as created_by_name
@@ -980,10 +1160,26 @@ class DatabaseManager {
     return this.statements.getUserByEmail.get(email);
   }
 
+   /* Retrieves a user by ID.
+   * 
+   * @param {number} id The user ID to retrieve.
+   * @returns {Promise<Object>} A promise that resolves with the user object if found, or null if not found.
+   */
   async getUserById(id) {
-    return this.statements.getUserById.get(id);
   }
 
+  /**
+   * Creates a new user account.
+   *
+   * @param {Object} userData The user data to create the account with.
+   * @param {string} userData.username The username for the new user.
+   * @param {string} userData.email The email address for the new user.
+   * @param {string} userData.password The password for the new user.
+   * @param {string} userData.full_name The full name of the new user.
+   * @param {string} [userData.role] The role of the new user. Defaults to 'teacher'.
+   * @param {boolean} [userData.is_active] Whether the new user is active or not. Defaults to true.
+   * @returns {Promise<Object>} A promise that resolves with the result of the operation.
+   */
   async createUser(userData) {
     const bcrypt = require('bcrypt');
     const passwordHash = await bcrypt.hash(userData.password, 12);
@@ -1010,6 +1206,20 @@ class DatabaseManager {
     return result;
   }
 
+  /**
+   * Updates an existing user's information in the database.
+   *
+   * @param {number} id The ID of the user to update.
+   * @param {Object} userData An object containing the updated user data.
+   * @param {string} userData.username The updated username for the user.
+   * @param {string} userData.email The updated email address for the user.
+   * @param {string} userData.full_name The updated full name of the user.
+   * @param {string} [userData.password] The updated password for the user (optional).
+   * @param {string} userData.role The updated role of the user.
+   * @param {boolean} userData.is_active Whether the user is active or not.
+   * @returns {Promise<Object>} A promise that resolves with the result of the update operation.
+   */
+
   async updateUser(id, userData) {
     const oldData = this.statements.getUserById.get(id);
     
@@ -1035,18 +1245,45 @@ class DatabaseManager {
     return result;
   }
 
+/**
+ * Updates the last login timestamp for a user.
+ *
+ * @param {number} userId The ID of the user whose last login timestamp is to be updated.
+ * @returns {Promise<Object>} A promise that resolves with the result of the update operation.
+ */
+
   async updateLastLogin(userId) {
     return this.statements.updateLastLogin.run(userId);
   }
+
+/**
+ * Increments the failed login count for a user.
+ *
+ * @param {number} userId The ID of the user whose failed login count is to be incremented.
+ * @returns {Promise<Object>} A promise that resolves with the result of the update operation.
+ */
 
   async incrementFailedLogins(userId) {
     return this.statements.incrementFailedLogins.run(userId);
   }
 
+  /**
+   * Resets the failed login count for a user to 0.
+   *
+   * @param {number} userId The ID of the user whose failed login count is to be reset.
+   * @returns {Promise<Object>} A promise that resolves with the result of the update operation.
+   */
   async resetFailedLogins(userId) {
     return this.statements.resetFailedLogins.run(userId);
   }
 
+  /**
+   * Locks a user's account until the given date and time.
+   * 
+   * @param {number} userId The ID of the user whose account is to be locked.
+   * @param {Date} lockUntil The date and time until which the account is to be locked.
+   * @returns {Promise<Object>} A promise that resolves with the result of the update operation.
+   */
   async lockAccount(userId, lockUntil) {
     return this.statements.lockAccount.run(lockUntil.toISOString(), userId);
   }
@@ -1092,6 +1329,13 @@ class DatabaseManager {
     return await this.query(query, params);
   }
 
+  /**
+   * Gets the performance trends of a student across different terms in a given academic year.
+   * 
+   * @param {number} studentId The ID of the student whose performance trends are to be retrieved.
+   * @param {string} [academicYear] The academic year for which to retrieve the performance trends. Defaults to the current academic year.
+   * @returns {Promise<Object[]>} A promise that resolves with an array of objects containing the term, subject name, score, grade letter, and running average of the student for each subject.
+   */
   async getStudentPerformanceTrends(studentId, academicYear = null) {
     const year = academicYear || (await this.getSetting('academic_year')).value;
     
@@ -1211,6 +1455,15 @@ class DatabaseManager {
     }
   }
 
+  /**
+   * Retrieves the current version of the database schema.
+   *
+   * Fetches the database version from the settings and parses it as an integer.
+   * If the version is not set or an error occurs, it returns a default version of 0.
+   *
+   * @returns {Promise<number>} A promise that resolves with the current database version as an integer.
+   */
+
   async getDatabaseVersion() {
     try {
       const result = await this.getSetting('database_version');
@@ -1220,20 +1473,36 @@ class DatabaseManager {
     }
   }
 
+  /**
+   * Sets the current version of the database schema.
+   *
+   * @param {number} version The new version number to set.
+   * @returns {Promise<void>} A promise that resolves when the version is set.
+   */
   async setDatabaseVersion(version) {
     await this.setSetting('database_version', version.toString(), 'number');
   }
 
-  async runMigration(version) {
-    log.info(`Running migration for version ${version}`);
-    
-    switch (version) {
+  /**
+   * Runs database schema migrations to the specified target version.
+   *
+   * Executes the necessary operations to migrate the database schema to the
+   * given target version. If the target version corresponds to an unknown
+   * migration, an error is thrown.
+   *
+   * @param {number} targetVersion The target version number to which the database schema should be migrated.
+   * @throws Will throw an error if the target version is unknown.
+   * @returns {Promise<void>} A promise that resolves when the migration is complete.
+   */
+
+  async runMigration(targetVersion) {
+    switch (targetVersion) {
       case 1:
         // Initial schema - already created in createTables()
         break;
-      // Add future migrations here
+        //Will add other migrations here
       default:
-        log.warn(`Unknown migration version: ${version}`);
+        throw new Error(`Unknown migration version: ${targetVersion}`);
     }
   }
 
