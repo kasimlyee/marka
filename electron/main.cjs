@@ -6,14 +6,14 @@ const windowStateKeeper = require('electron-window-state');
 const contextMenu = require('electron-context-menu');
 const log = require('electron-log');
 
-const DatabaseManager = require('./src/database/DatabaseManager');
-const SecurityManager = require('./src/security/SecurityManager');
-const LicenseManager = require('./src/license/LicenseManager');
-const BackupManager = require('./src/backup/BackupManager');
-const CloudSyncManager = require('./src/sync/CloudSyncManager');
-const ReportGenerator = require('./src/reports/ReportGenerator');
-const FileManager = require('./src/files/FileManager');
-const SystemMonitor = require('./src/monitoring/SystemMonitor');
+const DatabaseManager = require('./src/database/DatabaseManager.cjs');
+const SecurityManager = require('./src/security/SecurityManager.cjs');
+const LicenseManager = require('./src/license/LicenseManager.cjs');
+const BackupManager = require('./src/backup/BackupManager.cjs');
+const CloudSyncManager = require('./src/sync/CloudSyncManager.cjs');
+const ReportGenerator = require('./src/reports/ReportGenerator.cjs');
+const FileManager = require('./src/files/FileManager.cjs');
+const SystemMonitor = require('./src/monitoring/SystemMonitor.cjs');
 
 // Configure logging
 log.transports.file.level = 'info';
