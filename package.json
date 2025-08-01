@@ -25,7 +25,7 @@
   "scripts": {
     "start": "electron .",
     "dev": "concurrently \"npm run start-react\" \"wait-on http://localhost:3000 && xvfb-run electron .\"",
-    "start-react": "npm start",
+    "start-react": "vite",
     "build": "npm run build-react && electron-builder",
     "build-react": "npm run build",
     "build-win": "npm run build-react && electron-builder --win",
@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@google-cloud/storage": "^7.16.0",
+    "@tailwindcss/vite": "^4.1.11",
     "archiver": "^6.0.1",
     "async-mutex": "^0.5.0",
     "aws-sdk": "^2.1692.0",
@@ -57,11 +58,13 @@
     "electron-log": "^5.0.1",
     "electron-updater": "^6.1.7",
     "electron-window-state": "^5.0.3",
+    "exceljs": "^4.4.0",
     "extract-zip": "^2.0.1",
     "form-data": "^4.0.0",
     "handlebars": "^4.7.8",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
+    "lucide-react": "^0.535.0",
     "moment": "^2.30.1",
     "node-cron": "^3.0.3",
     "node-machine-id": "^1.1.12",
@@ -73,6 +76,7 @@
     "sharp": "^0.33.1",
     "speakeasy": "^2.0.0",
     "systeminformation": "^5.21.22",
+    "tailwindcss": "^4.1.11",
     "tar": "^7.4.3",
     "uuid": "^9.0.1",
     "xlsx": "^0.18.5"
