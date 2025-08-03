@@ -1,0 +1,26 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+cryptography = "*"
+google-cloud-storage = "*"
+boto3 = "*"
+pyside6 = "*"
+pypdf2 = "*"
+reportlab = "*"
+qrcode = "*"
+pillow = "*"
+pandas = "*"
+psutil = "*"
+gputil = "*"
+jwt = "*"
+requests = "*"
+bcrypt = "*"
+rsa = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"

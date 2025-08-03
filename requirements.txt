@@ -1,0 +1,15 @@
+cryptography
+google-cloud-storage
+boto3
+PySide6
+PyPDF2
+reportlab
+qrcode
+Pillow
+pandas
+psutil
+GPUtil
+jwt
+requests
+bcrypt
+rsa
