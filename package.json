@@ -24,10 +24,10 @@
   ],
   "scripts": {
     "start": "electron .",
-    "dev": "concurrently \"npm run start-react\" \"wait-on http://localhost:3000 && xvfb-run electron .\"",
+    "dev": "concurrently \"npm run start-react\" \"wait-on http://localhost:3000 && electron .\"",
     "start-react": "vite",
     "build": "npm run build-react && electron-builder",
-    "build-react": "npm run build",
+    "build-react": "vite build",
     "build-win": "npm run build-react && electron-builder --win",
     "build-mac": "npm run build-react && electron-builder --mac",
     "build-linux": "npm run build-react && electron-builder --linux",
@@ -113,8 +113,8 @@
       "output": "dist"
     },
     "files": [
-      "electron/main.js",
-      "electron/preload.js",
+      "electron/main.cjs",
+      "electron/preload.cjs",
       "electron/src/**/*",
       "build/**/*",
       "assets/**/*",
@@ -156,12 +156,9 @@
           ]
         }
       ],
-      "icon": "assets/icon.ico",
+      "icon": "assets/icon.png",
       "requestedExecutionLevel": "asInvoker",
-      "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
-      "synopsis": "Report Card Generator for Ugandan Schools",
-      "description": "Professional report card generation software compliant with Uganda National Examinations Board (UNEB) standards for PLE, UCE, and UACE.",
-      "publisherName": "Kasim Lyee"
+      "artifactName": "${productName}-${version}-${os}-${arch}.${ext}"
     },
     "nsis": {
       "oneClick": false,
