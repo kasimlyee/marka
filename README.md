@@ -1,5 +1,7 @@
 # Marka Report Card Generator
 
+<img src="assets/icon.png" alt="Logo" width="200"/>
+
 ## Empowering Ugandan Schools with Seamless, UNEB-Compliant Report Card Solutions
 
 Welcome to **Marka Report Card Generator**, a revolutionary desktop application crafted to transform how Ugandan schools create, manage, and share student report cards.
