@@ -4,7 +4,7 @@
 
 Welcome to **Marka Report Card Generator**, a revolutionary desktop application crafted to transform how Ugandan schools create, manage, and share student report cards.
 
-Marka is a SaaS-based, offline-capable solution powered by PySide6 and SQLite. It's designed to align perfectly with the Uganda National Examinatin Board (UNEB) grading systems for **Primary Leaving Examination (PLE)**, **Uganda Certificate of education (UCE)**, and **Uganda Advanced Certificate of Education (UACE)**, while embracing the new competency-based curriculu, (CBC). Hosted at [https://marka.codewithlyee.com](marka.codewithlyee.com). It offers a modern, secure and affordable way to streamline academic reporting.
+Marka is a SaaS-based, offline-capable solution powered by PySide6 and SQLite. It's designed to align perfectly with the Uganda National Examinatin Board (UNEB) grading systems for **Primary Leaving Examination (PLE)**, **Uganda Certificate of education (UCE)**, and **Uganda Advanced Certificate of Education (UACE)**, while embracing the new competency-based curriculu, (CBC). Hosted at [marka.codewithlyee.com](https://marka.codewithlyee.com). It offers a modern, secure and affordable way to streamline academic reporting.
 
 ### Why Marka?
 
@@ -22,9 +22,9 @@ In Uganda's evolving educational landscape, schools face challenges in adopting 
 
 ### More information
 
-Email: [mailto:info@codewithlyee.com](info@codewithlyee.com)
-HelpDesk: [https://marka.codewithlyee.com/support](marka.codewithlyee.com/support)
-Docs: [https://docs.marka.codewithlyee.com](docs.marka.codewithlyee.com)
+Email: [info@codewithlyee.com](mailto:info@codewithlyee.com)
+HelpDesk: [marka.codewithlyee.com/support](https://marka.codewithlyee.com/support)
+Docs: [docs.marka.codewithlyee.com](https://docs.marka.codewithlyee.com)
 
 ## License
 
