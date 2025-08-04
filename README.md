@@ -1,6 +1,6 @@
 # Marka Report Card Generator
 
-<img src="assets/icon.png" alt="Logo" width="200"/>
+![Logo](assets/icon.png)
 
 ## Empowering Ugandan Schools with Seamless, UNEB-Compliant Report Card Solutions
 
