@@ -1,12 +1,32 @@
-# React + Vite
+# Marka Report Card Generator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Empowering Ugandan Schools with Seamless, UNEB-Compliant Report Card Solutions
 
-Currently, two official plugins are available:
+Welcome to **Marka Report Card Generator**, a revolutionary desktop application crafted to transform how Ugandan schools create, manage, and share student report cards.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Marka is a SaaS-based, offline-capable solution powered by PySide6 and SQLite. It's designed to align perfectly with the Uganda National Examinatin Board (UNEB) grading systems for **Primary Leaving Examination (PLE)**, **Uganda Certificate of education (UCE)**, and **Uganda Advanced Certificate of Education (UACE)**, while embracing the new competency-based curriculu, (CBC). Hosted at [https://marka.codewithlyee.com](marka.codewithlyee.com). It offers a modern, secure and affordable way to streamline academic reporting.
 
-## Expanding the ESLint configuration
+### Why Marka?
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+In Uganda's evolving educational landscape, schools face challenges in adopting the CBC, managing data offline, and ensuring compliance with UNEB standards. Marka rises to the occasion with:
+
+- **offline-First Design**: Operates fully offline with an isolated database per school, perfect for rural areas with limited internet.
+
+- **UNEB Compliance**: Supports PLE (division-based, aggregates 4-34), UCE (A-E letter grades with continuous Assessment), and UACE (point-based, A-F).
+
+- **Custom Grading**: Extendable grading systems for 200,000 UGX, catering to unique school needs.
+
+- **Parent Engagement**: Multilingual report cards (English, Luganda, Swahili) and a parent portal for easy access.
+
+- **User-friendly Interface**:Excel-like data entry and customizable templates make reporting a breeze, even for non-technical users.
+
+### More information
+
+Email: [mailto:info@codewithlyee.com](info@codewithlyee.com)
+HelpDesk: [https://marka.codewithlyee.com/support](marka.codewithlyee.com/support)
+Docs: [https://docs.marka.codewithlyee.com](docs.marka.codewithlyee.com)
+
+## License
+
+Copyright (c) 2025 Kasim Lyee. All rights reserved.
+Unauthorized distribution or modification is prohibited. Contact the developer for licensing inquiries.
