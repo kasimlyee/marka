@@ -1,0 +1,12 @@
+2025-08-05 10:41:09,487 - __main__ - INFO - Initialized 20 mock students
+2025-08-05 10:41:09,488 - __main__ - CRITICAL - Critical error starting application: name 'Theme' is not defined
+2025-08-05 10:46:39,480 - __main__ - INFO - Initialized 20 mock students
+2025-08-05 10:46:39,783 - __main__ - ERROR - Error setting up UI: 'PySide6.QtWidgets.QToolButton' object has no attribute 'setDefaultWidget'
+2025-08-05 10:47:04,866 - __main__ - INFO - Marka Report Card System initialized successfully
+2025-08-05 10:47:06,077 - __main__ - ERROR - Error displaying notification: 'EnhancedMainWindow' object has no attribute 'notification_overlay'
+2025-08-05 10:47:06,077 - __main__ - INFO - Notification: success - Welcome to Marka Report Card System Enterprise Edition!
+2025-08-05 10:47:24,157 - __main__ - INFO - Application closing
+2025-08-05 10:48:06,181 - __main__ - INFO - Initialized 20 mock students
+2025-08-05 10:48:06,325 - __main__ - ERROR - Error setting up UI: 'PySide6.QtWidgets.QToolButton' object has no attribute 'setDefaultWidget'
+2025-08-05 10:48:10,050 - __main__ - INFO - Marka Report Card System initialized successfully
+2025-08-05 10:48:48,949 - __main__ - INFO - Application closing
